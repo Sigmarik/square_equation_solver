@@ -1,6 +1,6 @@
 /* 
 main.c receves 3 floating point parameters (A, B and C) and prints
-solution of equation x * x * A + x * B + x * C = 0.
+solution of the equation x * x * A + x * B + x * C = 0.
 */
 
 #include "rootsolver.c"
@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
         return 1;
     }
     while (++i_argument_iterator < 3) {
-        char* pc_break_char;  // pointer to the character where strtof() stopped execution
+        char* pc_break_char;  // pointer to the character where strtof() stopped its execution
 
         pd_coefficients[i_argument_iterator] = strtof(argv[i_argument_iterator + 1], &pc_break_char);
         b_wrong_input = b_wrong_input || *pc_break_char != 0;

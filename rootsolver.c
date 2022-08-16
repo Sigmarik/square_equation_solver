@@ -1,3 +1,7 @@
+/*
+rootsolver.c - module for solving square equations by calculating descriminant.
+*/
+
 #include "rootsolver.h"
 
 // Calculates descriminant of the equation by coefficients.
@@ -7,8 +11,8 @@ static double d_discriminant(const double pd_args[3]) {
 }
 
 // Solves equation by given coefficients and inserts
-// answers into pd_answers array as if 1-st and 4-th elements
-// are rational parts of both answers and 2-nd and 3-rd elements
+// answers into pd_answers array as if 1-st and 3-rd elements
+// are rational parts of both answers and 2-nd and 4-th elements
 // are imaginary multiplyers.
 // pd_args - coefficients of the equation
 // pd_answers - array to put answers in
