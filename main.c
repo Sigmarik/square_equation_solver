@@ -24,10 +24,12 @@ int main(int argc, char **argv) {
     // Config file parsing.
     if (!pf_config || !fscanf(pf_config, "imaginary = %d", &b_imaginary)) {
         printf("No config file detected or it was corrupt, terminating.\n");
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
-    fclose(pf_config);
+    if (fclose(pf_config) == EOF) {
+        printf("Failed to close config file.\n");
+    };
 
     // Receive data from the user.
     read_double("A = ", &d_a);
@@ -43,6 +45,8 @@ int main(int argc, char **argv) {
     // Print solution(s) on the screen.
     print_solution(pd_answers);
 
+    print_solution(NULL);
+
     return 0;
 }
 
@@ -50,6 +54,14 @@ int main(int argc, char **argv) {
 // pc_prefix - prefix to print before each request
 // pd_variable - pointer to the variable to push the result
 void read_double(const char* pc_prefix, double* pd_variable) {
+    assert(pc_prefix);
+    assert(pd_variable);
+    if (!pc_prefix || !pd_variable) {
+        errno = NULLPTR_ERROR;
+        fprintf(stderr, "NULLPTR_ERROR: Null pointer detected in function \"read_double\". Terminating.\n");
+        exit(EXIT_FAILURE);
+    }
+    
     printf("%s", pc_prefix);
     while (!scanf("%lf", pd_variable)) {
         while (getchar() != '\n') /*pass*/;
@@ -66,6 +78,13 @@ void read_double(const char* pc_prefix, double* pd_variable) {
 //* It is still intentional, though, as it may be usefull to
 //* print values from the middle of some bigger array.
 void print_solution(const double* pd_answers) {
+    assert(pd_answers);
+    if (!pd_answers && !ASSERTABLE) {
+        errno = NULLPTR_ERROR;
+        fprintf(stderr, "NULLPTR_ERROR: pd_answers in \"print_solution\" was NULL\n");
+        exit(EXIT_FAILURE);
+    }
+
     if (isnan(pd_answers[1])) {
         printf("Equation has no reperesentable solutions.\n");
         return;

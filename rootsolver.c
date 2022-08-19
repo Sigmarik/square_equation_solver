@@ -2,8 +2,11 @@
 rootsolver.c - module for solving square equations using descriminant method.
 */
 
+// Utility
 #include <stdio.h>
+#include <stdlib.h>
 
+// Headers
 #include "rootsolver.h"
 
 // Compares two doubles and returns sign(a - b)
@@ -25,8 +28,23 @@ int i_dcmp(const double d_a, const double d_b) {
 // d_c - C coefficient
 // pd_answers - array to put answers in
 void solve(const double d_a, const double d_b, const double d_c, double pd_answers[4]) {
+    assert(pd_answers);
+    if (!pd_answers && !ASSERTABLE) {
+        errno = NULLPTR_ERROR;
+        fprintf(stderr, "NULLPTR_ERROR: pd_answers in \"solve\" was NULL\n");
+        exit(EXIT_FAILURE);
+    }
+
     double d_discr = d_b * d_b - 4 * d_a * d_c;
     double d_delta = sqrt(fabs(d_discr));
+
+    int b_valid_equation = d_a || d_b;
+
+    if (!b_valid_equation) {
+        errno = INPUT_ERROR;
+        fprintf(stderr, "Wrong equation arguments. Equation has infinite / zero roots.\n");
+        exit(EXIT_FAILURE);
+    }
 
     if (!i_dcmp(d_a, 0.0)) {
         // In case if pd_args[1] = 0 function can insert nan,
