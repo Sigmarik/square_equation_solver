@@ -4,7 +4,7 @@
 #include <math.h>
 
 // Debugging
-#define NDEBUG
+/* NDEBUG should be here-> */ //#define NDEBUG
 #include <assert.h>
 #include <errno.h>
 
