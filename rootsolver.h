@@ -7,15 +7,10 @@
 /* NDEBUG should be here-> */ //#define NDEBUG
 #include <assert.h>
 #include <errno.h>
-
-#ifdef NDEBUG
-#define ASSERTABLE 0
-#else
-#define ASSERTABLE 1
-#endif
-
-#define INPUT_ERROR -1
-#define NULLPTR_ERROR -2
+enum ERRORS {
+    INPUT_ERROR = -1,
+    NULLPTR_ERROR = -2,
+};
 
 // Functional
 int i_dcmp(const double d_a, const double d_b);

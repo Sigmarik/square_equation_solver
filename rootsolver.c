@@ -29,7 +29,7 @@ int i_dcmp(const double d_a, const double d_b) {
 // pd_answers - array to put answers in
 void solve(const double d_a, const double d_b, const double d_c, double pd_answers[4]) {
     assert(pd_answers);
-    if (!pd_answers && !ASSERTABLE) {
+    if (!pd_answers) {
         errno = NULLPTR_ERROR;
         fprintf(stderr, "NULLPTR_ERROR: pd_answers in \"solve\" was NULL\n");
         exit(EXIT_FAILURE);

@@ -45,8 +45,6 @@ int main(int argc, char **argv) {
     // Print solution(s) on the screen.
     print_solution(pd_answers);
 
-    print_solution(NULL);
-
     return 0;
 }
 
@@ -79,7 +77,7 @@ void read_double(const char* pc_prefix, double* pd_variable) {
 //* print values from the middle of some bigger array.
 void print_solution(const double* pd_answers) {
     assert(pd_answers);
-    if (!pd_answers && !ASSERTABLE) {
+    if (!pd_answers) {
         errno = NULLPTR_ERROR;
         fprintf(stderr, "NULLPTR_ERROR: pd_answers in \"print_solution\" was NULL\n");
         exit(EXIT_FAILURE);
