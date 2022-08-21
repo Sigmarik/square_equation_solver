@@ -23,6 +23,7 @@ int i_dcmp(const double d_a, const double d_b) {
 // answers into pd_answers array as if 1-st and 3-rd elements
 // are rational parts of both answers and 2-nd and 4-th elements
 // are imaginary multiplyers.
+// Fills pd_answers with INFINITY if equation has infinite number of solutions and NAN if zero.
 // d_a - A coefficient
 // d_b - B coefficient
 // d_c - C coefficient
@@ -38,21 +39,11 @@ void solve(const double d_a, const double d_b, const double d_c, double pd_answe
     double d_discr = d_b * d_b - 4 * d_a * d_c;
     double d_delta = sqrt(fabs(d_discr));
 
-    int b_valid_equation = d_a || d_b;
-
-    if (!b_valid_equation) {
-        errno = INPUT_ERROR;
-        fprintf(stderr, "Wrong equation arguments. Equation has infinite / zero roots.\n");
-        exit(EXIT_FAILURE);
-    }
-
     if (!i_dcmp(d_a, 0.0)) {
-        // In case if pd_args[1] = 0 function can insert nan,
-        // which is intentional and serves as
-        // a good indicator of unsolvable 
-        // (or state-like) equation.
         pd_answers[0] = pd_answers[2] = -d_c / d_b;
         pd_answers[1] = pd_answers[3] = 0.0 / d_b;
+        if (i_dcmp(d_b, 0.0)) return;
+        for (int id = 0; id < 4; id++) pd_answers[id] = !i_dcmp(d_c, 0.0) ? INFINITY : NAN;
     } else if (d_discr > 0) {
         pd_answers[0] = (-d_b - d_delta) / (2.0f * d_a);
         pd_answers[2] = (-d_b + d_delta) / (2.0f * d_a);

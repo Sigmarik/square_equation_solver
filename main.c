@@ -17,8 +17,6 @@ void print_solution(const double* pd_answers);
 // argc - argument count (including program name)
 // argv - pointers to arguments
 int main(int argc, char **argv) {
-    double d_a = 0, d_b = 0, d_c = 0;  // equation coefficients
-    double pd_answers[4] = {};  // equation roots
     FILE* pf_config = fopen("rootsolver.conf", "r");  // pointer to the rootsolver.conf file
 
     // Config file parsing.
@@ -31,10 +29,14 @@ int main(int argc, char **argv) {
         printf("Failed to close config file.\n");
     };
 
+    double d_a = 0, d_b = 0, d_c = 0;  // equation coefficients
+
     // Receive data from the user.
     read_double("A = ", &d_a);
     read_double("B = ", &d_b);
     read_double("C = ", &d_c);
+
+    double pd_answers[4] = {};  // equation roots
 
     // Display equation to the user before major computations.
     printf("Equation:\n%gx2 + %gx + %g = 0\n", d_a, d_b, d_c);
@@ -83,8 +85,11 @@ void print_solution(const double* pd_answers) {
         exit(EXIT_FAILURE);
     }
 
-    if (isnan(pd_answers[1])) {
-        printf("Equation has no reperesentable solutions.\n");
+    if (isnan(pd_answers[0])) {
+        printf("Equation has no solutions.\n");
+        return;
+    } else if (isinf(pd_answers[0])) {
+        printf("Equation has infinite solutions.\n");
         return;
     }
     if (i_dcmp(pd_answers[1], 0.0) == 0 && !b_imaginary) {
