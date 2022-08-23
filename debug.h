@@ -25,4 +25,9 @@ enum ERRORS {
     NULLPTR_ERROR = -2,
 };
 
+/**
+ * @brief Prints [errno] variable if it's value is not zero.
+ */
+void print_errno();
+
 #endif

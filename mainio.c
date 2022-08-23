@@ -18,7 +18,9 @@ void read_double(const char* pc_prefix, double* pd_variable) {
     
     printf("%s", pc_prefix);
     while (!scanf("%lf", pd_variable)) {
-        while (getchar() != '\n') /*pass*/;
+
+        while (getchar() != '\n') {};
+
         printf("Floating point argument expected.\n");
         printf("%s", pc_prefix);
     }
