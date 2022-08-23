@@ -15,10 +15,12 @@
 #include "rootsolver.h"
 #include "mainio.h"
 
-// Tries to read 3 doubles corresponding to A, B and C equation coefficients.
-// argc - argument count (including program name)
-// argv - pointers to arguments
-int main(int argc, char **argv) {
+/**
+ * @brief Main function of the programm. Reads 3 doubles from stdio and prints the solution of the equation.
+ * 
+ * @return exit status (0 if successful)
+ */
+int main(void) {
     printf("Square equation solver by Ilya Kudryashov.\n");
     printf("Programm solves square equations in the form of A*x*x + B*x + C = 0\n");
     printf("Build from\n%s %s\n", __DATE__, __TIME__);
