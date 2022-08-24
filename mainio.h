@@ -22,10 +22,12 @@ void read_double(const char* pc_prefix, double* pd_variable);
 
 /**
  * @brief Prints out the solution of the square equation in the fancy way.
+ * 
  * @param pd_answers - pointer to the array of at least 4 doubles with answers 
  * in the shape specified in rootsolver.c/void solve
+ * @param b_show_imaginary - 1 if function should consider imaginary solutions, 0 othervise.
  * 
- * @note
+ * @note 
  * Function has no protection from arrays smaller than required, so
  * it is possible for function to crash with segfault.
  * It is still intentional, though, as it may be usefull to

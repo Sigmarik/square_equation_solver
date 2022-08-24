@@ -19,13 +19,16 @@ double d_solve_linear(const double d_a, const double d_b) {
     return -d_b / d_a;
 }
 
-void solve_square(const double d_a, const double d_b, const double d_c, double pd_answers[4]) {
-    assert(pd_answers);
-    if (!pd_answers) {
-        errno = NULLPTR_ERROR;
-        fprintf(stderr, "NULLPTR_ERROR: pd_answers in \"solve\" was NULL\n");
-        exit(EXIT_FAILURE);
-    }
+void solve_square(const double d_a, const double d_b, const double d_c, double pd_answers[4], int* pi_error_code) {
+    log_assert(pd_answers, "warning", WARNINGS, return;);
+    // if (!pd_answers) {
+    //     *pi_error_code = NULLPTR_ERROR;
+    //     if (log_file(WARNINGS)) {
+    //         log_prefix("error", WARNINGS);
+    //         fprintf(log_file(WARNINGS), "pd_answers in file %s at line %s was NULL.\n", __FILE__, __LINE__);
+    //     }
+    //     return;
+    // }
 
     double d_discr = d_b * d_b - 4 * d_a * d_c;
     double d_delta = sqrt(fabs(d_discr));
@@ -38,11 +41,19 @@ void solve_square(const double d_a, const double d_b, const double d_c, double p
     } else if (!i_dcmp(d_c, 0.0)) {
         pd_answers[0] = 0.0;
         pd_answers[2] = d_solve_linear(d_a, d_b);
+
+        if (pd_answers[2] < 0.0) {
+            pd_answers[0] = pd_answers[2];
+            pd_answers[2] = 0.0;
+        }
+        
         pd_answers[1] = pd_answers[3] = 0.0;
     } else if (d_discr > 0) {
+
         pd_answers[0] = (-d_b - d_delta) / (2.0f * d_a);
-        pd_answers[2] = (-d_b + d_delta) / (2.0f * d_a);
         pd_answers[1] = pd_answers[3] = 0;
+        pd_answers[2] = (-d_b + d_delta) / (2.0f * d_a);
+    
     } else {
         pd_answers[0] = pd_answers[2] = -d_b / (2.0f * d_a);
         pd_answers[1] = -(pd_answers[3] = d_delta / (2.0f * d_a));
