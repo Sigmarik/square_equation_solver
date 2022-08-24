@@ -45,6 +45,6 @@ enum ERRORS {
 /**
  * @brief Prints [errno] variable if it's value is not zero.
  */
-void print_errno();
+void end_programm();
 
 #endif

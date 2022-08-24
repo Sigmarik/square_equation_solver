@@ -34,7 +34,7 @@ void fill_config(FILE* pf_config);
  * @return exit status (0 if successful)
  */
 int main(const int argc, const char** argv) {
-    atexit(print_errno);
+    atexit(end_programm);
 
     log_init("programm_log.log", 1, &errno);
 
