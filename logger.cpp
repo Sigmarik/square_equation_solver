@@ -21,16 +21,11 @@ void log_init(const char* pc_filename, const unsigned int i_threshold, int* pi_e
     }
 
     if ((pf_logfile = fopen(pc_filename, "a"))) {
-        log_prefix();
+        log_prefix("open");
         fprintf(log_file(), "Log file %s was opened. Log dummy - %s.\n", pc_filename, pc_dummyname);
         return;
     }
 
-    if ((pf_logfile = fopen(pc_filename, "w"))) {
-        log_prefix();
-        fprintf(log_file(), "Log file %s was created. Log dummy - %s.\n", pc_filename, pc_dummyname);
-        return;
-    }
     if (pi_error_code) *pi_error_code = FILE_ERROR;
 }
 
@@ -59,7 +54,7 @@ FILE* log_file(const unsigned int importance) {
 
 void log_close(int* pi_error_code) {
     if (!log_file()) return;
-    log_write("status", "closing log files.");
+    log_write("close", "Closing log files.");
     if (!fclose(pf_logfile) || !fclose(pf_logdummy)) {
         if (pi_error_code) *pi_error_code = FILE_ERROR;
     }

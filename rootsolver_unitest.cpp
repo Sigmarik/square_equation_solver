@@ -65,7 +65,7 @@ int skip_line(int* status);
 int main(void) {
     atexit(end_programm);
 
-    log_init("rootsolver_tester.log");
+    log_init("rootsolver_tester.log", AUTOMATIC_CORRECTIONS);
 
     int exec_result = 0;
 
@@ -148,7 +148,8 @@ void print_result(const double* pd_result) {
 int read_test(double* pd_a, double* pd_b, double* pd_c, double pd_expected[4]) {
     int status = 0;
     if (!scanf("i %lf %lf %lf\n", pd_a, pd_b, pd_c)) {
-        if (skip_line(&status)) return 1;
+        //if (skip_line(&status)) return 1;
+        //return 1;
     }
     if (scanf("o %lf %lf %lf %lf\n", 
         &pd_expected[0], &pd_expected[1], &pd_expected[2], &pd_expected[3]) < 4) {

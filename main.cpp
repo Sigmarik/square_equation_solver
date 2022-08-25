@@ -42,6 +42,11 @@ int main(const int argc, const char** argv) {
     printf("Programm solves square equations in the form of A*x*x + B*x + C = 0\n");
     printf("Build from\n%s %s\n", __DATE__, __TIME__);
 
+    if (log_file()) {
+        log_prefix("start");
+        fprintf(log_file(), "Programm started. Build from %s %s.\n", __DATE__, __TIME__);
+    }
+
     // Config file parsing.
     log_write("status", "Reading config file...", STATUS_REPORTS, &errno);
 
@@ -79,6 +84,10 @@ int main(const int argc, const char** argv) {
     read_double("C = ", &d_c);
 
     log_write("status", "finished reading data.", STATUS_REPORTS, &errno);
+    if (log_file()) {
+        log_prefix("status", STATUS_REPORTS + 1);
+        fprintf(log_file(STATUS_REPORTS + 1), "user entered coefficients A = %lg, B = %lg, C = %lg.\n", d_a, d_b, d_c);
+    }
     log_write("status", "processing started.", STATUS_REPORTS, &errno);
 
     double pd_answers[4] = {};  // equation roots
@@ -86,6 +95,12 @@ int main(const int argc, const char** argv) {
     // Display equation to the user before major computations.
     printf("Equation:\n%gx2 + %gx + %g = 0\n", d_a, d_b, d_c);
     solve_square(d_a, d_b, d_c, pd_answers);
+
+    if (log_file()) {
+        log_prefix("status", STATUS_REPORTS + 1);
+        fprintf(log_file(STATUS_REPORTS + 1), "estimated solution: X1 = %lg + %lg i, X2 = %lg + %lg i.\n", 
+            pd_answers[0], pd_answers[1], pd_answers[2], pd_answers[3]);
+    }
 
     log_write("status", "printing solution...", STATUS_REPORTS, &errno);
 
