@@ -15,14 +15,14 @@ ROOTSOLVER_UNI_LOG = rootsolver_uni.log
 
 all: main
 
-main: main.o mainio.o rootsolver.o debug.o logger.o
-	$(CC) main.o mainio.o rootsolver.o debug.o logger.o -o $(BLD_NAME)_v$(BLD_VERSION)_$(BLD_TYPE)$(BLD_FORMAT)
+main: main.o mainio.o rootsolver.o debug.o logger.o argparser.o utils.o
+	$(CC) main.o mainio.o rootsolver.o debug.o logger.o argparser.o utils.o -o $(BLD_NAME)_v$(BLD_VERSION)_$(BLD_TYPE)$(BLD_FORMAT)
 
 run:
 	./$(BLD_NAME)_v$(BLD_VERSION)_$(BLD_TYPE)$(BLD_FORMAT)
 
-test: rootsolver_unitest.o rootsolver.o debug.o logger.o
-	$(CC) rootsolver_unitest.o rootsolver.o debug.o logger.o -o $(ROOTSOLVER_UNI_NAME)
+test: rootsolver_unitest.o rootsolver.o debug.o logger.o utils.o
+	$(CC) rootsolver_unitest.o rootsolver.o debug.o logger.o utils.o -o $(ROOTSOLVER_UNI_NAME)
 	./$(ROOTSOLVER_UNI_NAME) > $(ROOTSOLVER_UNI_LOG) 2>&1 < $(ROOTSOLVER_TESTS)
 
 rootsolver_unitest.o:
@@ -43,8 +43,14 @@ debug.o:
 logger.o:
 	$(CC) $(CFLAGS) logger.cpp
 
+argparser.o:
+	$(CC) $(CFLAGS) argparser.cpp
+
+utils.o:
+	$(CC) $(CFLAGS) utils.cpp
+
 clean:
 	rm -rf *.o
 
-rm:
-	rm -rf *.o *.log *.out $(ROOTSOLVER_UNI_NAME)
+rm: clean
+	rm -rf *.log *.out $(ROOTSOLVER_UNI_NAME)

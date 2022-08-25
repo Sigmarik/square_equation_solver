@@ -2,10 +2,9 @@
 
 #include <stdio.h>
 
-void end_programm() {
+void end_program() {
     if (log_file()) {
-        log_prefix("exit", TERMINATE_REPORTS);
-        fprintf(log_file(TERMINATE_REPORTS), "Programm closed with errno = %d.\n", errno);
+        _LOG_PRINTF_(TERMINATE_REPORTS, "exit", "Program closed with errno = %d.\n", errno);
         log_close();
     }
     if (errno == 0) return;

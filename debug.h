@@ -32,19 +32,22 @@ enum ERRORS {
  * @brief prints description to log file if equation fails.
  * 
  */
-#define log_assert(equation, tag, importance, action) {                                                                 \
+#ifndef NDEBUG
+#define _LOG_FAIL_CHECK_(equation, tag, importance, action, errcode, errtype)                                           \
+do {                                                                                                                    \
     if (!(equation)) {                                                                                                  \
-        if (log_file(importance)) {                                                                                     \
-            log_prefix("error", importance);                                                                            \
-            fprintf(log_file(importance), "Equation %s in file %s at line %d failed.\n", #equation, __FILE__, __LINE__);\
-        }                                                                                                               \
+        if (errcode) *(errcode) = (errtype);                                                                            \
+        _LOG_PRINTF_(importance, "error", "Equation %s in file %s at line %d failed.\n", #equation, __FILE__, __LINE__);\
         action                                                                                                          \
     }                                                                                                                   \
-}
+} while(0)
+#else
+#define _LOG_FAIL_CHECK_(...) ((void) 0)
+#endif
 
 /**
  * @brief Prints [errno] variable if it's value is not zero.
  */
-void end_programm();
+void end_program();
 
 #endif

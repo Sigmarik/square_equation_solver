@@ -21,8 +21,7 @@ void log_init(const char* pc_filename, const unsigned int i_threshold, int* pi_e
     }
 
     if ((pf_logfile = fopen(pc_filename, "a"))) {
-        log_prefix("open");
-        fprintf(log_file(), "Log file %s was opened. Log dummy - %s.\n", pc_filename, pc_dummyname);
+        _LOG_PRINTF_(ABSOLUTE_IMPORTANCE, "open", "Log file %s was opened. Log dummy - %s.\n", pc_filename, pc_dummyname);
         return;
     }
 
@@ -44,8 +43,7 @@ void log_prefix(const char* tag, const unsigned int importance) {
 
 void log_write(const char* tag, const char* message, const unsigned int importance, int* pi_error_code) {
     if (!log_file()) return;
-    log_prefix(tag, importance);
-    fprintf(log_file(importance), "%s\n", message);
+    _LOG_PRINTF_(importance, tag, "%s\n", message);
 }
 
 FILE* log_file(const unsigned int importance) {

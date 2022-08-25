@@ -16,6 +16,7 @@
 #include "debug.h"
 
 #include "rootsolver.h"
+#include "utils.h"
 
 /**
  * @brief Compares two double arrays and returns 1 if they are equal.
@@ -34,6 +35,12 @@ int compare_answers(const double* pd_a, const double* pd_b, const int num_elemen
  */
 void print_result(const double* pd_result);
 
+enum TEST_READING_RESULTS {
+    READ_SUCCESSFUL,
+    READ_EOF,
+    READ_CORRUPTION,
+};
+
 /**
  * @brief Reads single test from stdin.
  * 
@@ -41,7 +48,7 @@ void print_result(const double* pd_result);
  * @param pd_b coefficient B
  * @param pd_c coefficient C
  * @param pd_expected expected solution
- * @return int 1 in case of EOF, 2 in case of corruption and 0 if reading was successful.
+ * @return int READ_EOF, READ_CORRYPTION or READ_SUCCESSFUL.
  */
 int read_test(double* pd_a, double* pd_b, double* pd_c, double* pd_expected);
 
@@ -62,67 +69,58 @@ int check_input();
  */
 int skip_line(int* status);
 
-int main(void) {
-    atexit(end_programm);
+/**
+ * @brief Prints out IO of the test.
+ * 
+ * @param d_a A coefficient
+ * @param d_b B coefficient
+ * @param d_c C coefficient
+ * @param pd_expected expected answer
+ * @param pd_result received answer
+ */
+void print_test_info(const double d_a, const double d_b, const double d_c, 
+                       const double * const pd_expected, const double * const pd_result);
 
+enum TEST_RESULTS {
+    TEST_SUCCESS,
+    TEST_FAIL,
+};
+
+int main(void) {
+    atexit(end_program);
     log_init("rootsolver_tester.log", AUTOMATIC_CORRECTIONS);
 
-    int exec_result = 0;
+    int exec_result = TEST_SUCCESS;
 
     printf("Running predefined tests:\n");
 
-    double d_a = 0, d_b = 0, d_c = 0;
-    double pd_result[4] = {};
-    double pd_expected[4] = {};
+    double d_a = 0, d_b = 0, d_c = 0, pd_result[4] = {}, pd_expected[4] = {};
 
     log_write("status", "reading file with tests...", STATUS_REPORTS, &errno);
 
-    int test_count = 0;
     int read_result = 0;
     for (int test_id = 0; 
-        ((read_result = read_test(&d_a, &d_b, &d_c, pd_expected)) & 1) == 0; /*if in {0, 2}*/ 
-        test_id++, test_count++) {
+        (read_result = read_test(&d_a, &d_b, &d_c, pd_expected)) != READ_EOF;
+        test_id++) {
         
         if (read_result) {
             printf("SK: Test %d was skipped due to corruption.\n", test_id);
-            exec_result = 1;
+            exec_result = TEST_FAIL;
             continue;
         }
 
-        if (log_file()) {
-            log_prefix("status", STATUS_REPORTS + 1);
-            fprintf(log_file(STATUS_REPORTS + 1), "Test %d detected. Processing...\n", test_id);
-        }
+        _LOG_PRINTF_(STATUS_REPORTS + 1, "status", "Test %d detected. Processing...\n", test_id);
 
         int err_code = 0;
         solve_square(d_a, d_b, d_c, pd_result, &err_code);
 
-        if (log_file()) {
-            log_prefix("status", STATUS_REPORTS + 1);
-            fprintf(log_file(STATUS_REPORTS + 1), "Test %d processed. Verifying...\n", test_id);
-        }
+        _LOG_PRINTF_(STATUS_REPORTS + 1, "status", "Test %d detected. Verifying...\n", test_id);
 
         if (err_code || !compare_answers(pd_result, pd_expected, 4)) {
-
-            log_write("status", "Test failed.", STATUS_REPORTS + 1, &errno);
-            
-            if (err_code) {
-                printf("RE");  // Runtime Error
-            } else {
-                printf("WA");  // Wrong Answer
-            }
-
+            printf(err_code ? "RE" : "WA");
             printf(": Test %d failed!\n", test_id);
-            printf("  A = %lg, B = %lg, C = %lg\n", d_a, d_b, d_c);
-
-            printf("  Expected:\n  ");
-            print_result(pd_expected);
-
-            printf("  Got:\n  ");
-            print_result(pd_result);
-
-            exec_result = EXIT_FAILURE;
-
+            print_test_info(d_a, d_b, d_c, pd_expected, pd_result);
+            exec_result = TEST_FAIL;
         } else {
             printf("OK: Test %d passed.\n", test_id);
             log_write("status", "Test successful.", STATUS_REPORTS + 1, &errno);
@@ -146,15 +144,12 @@ void print_result(const double* pd_result) {
 }
 
 int read_test(double* pd_a, double* pd_b, double* pd_c, double pd_expected[4]) {
-    int status = 0;
-    if (!scanf("i %lf %lf %lf\n", pd_a, pd_b, pd_c)) {
-        //if (skip_line(&status)) return 1;
-        //return 1;
-    }
+    int status = READ_SUCCESSFUL;
+    scanf("i %lf %lf %lf\n", pd_a, pd_b, pd_c);
     if (scanf("o %lf %lf %lf %lf\n", 
         &pd_expected[0], &pd_expected[1], &pd_expected[2], &pd_expected[3]) < 4) {
         
-        if (skip_line(&status)) return 1;
+        if (skip_line(&status)) return READ_EOF;
     }
     return status;
 }
@@ -172,7 +167,21 @@ int skip_line(int* status) {
     if (check_input() == 1) {
         while (getchar() != '\n');
         log_write("warning", "Wrong character detected. Skipping to the next line.", WARNINGS, &errno);
-        *status = 2;
+        *status = READ_CORRUPTION;
         return 0;
     } return 1;
+}
+
+void print_test_info(const double d_a, const double d_b, const double d_c, 
+                       const double * const pd_expected, const double * const pd_result) {
+    
+    log_write("status", "Test failed.", STATUS_REPORTS + 1, &errno);
+
+    printf("  A = %lg, B = %lg, C = %lg\n", d_a, d_b, d_c);
+
+    printf("  Expected:\n  ");
+    print_result(pd_expected);
+
+    printf("  Got:\n  ");
+    print_result(pd_result);
 }

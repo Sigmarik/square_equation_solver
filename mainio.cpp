@@ -5,18 +5,13 @@
 #include <stdlib.h>
 
 #include "debug.h"
-#include "rootsolver.h"
+#include "utils.h"
+//#include "rootsolver.h"
 
 #define PRECONDITION
 
-void read_double(const char* pc_prefix, double* pd_variable) {
-    log_assert(pc_prefix && pd_variable, "warning", WARNINGS, return;);
-    // if (!pc_prefix || !pd_variable) {
-    //     errno = NULLPTR_ERROR;
-    //     fprintf(stderr, "NULLPTR_ERROR: Null pointer detected in function \"read_double\". Terminating.\n");
-    //     exit(EXIT_FAILURE);
-    //     }
-    // }
+void read_double(const char* pc_prefix, double* pd_variable, int* pi_error_code) {
+    _LOG_FAIL_CHECK_(pc_prefix && pd_variable, "warning", WARNINGS, return;, pi_error_code, NULLPTR_ERROR);
 
     printf("%s", pc_prefix);
     while (!scanf("%lf", pd_variable)) {
@@ -28,13 +23,8 @@ void read_double(const char* pc_prefix, double* pd_variable) {
     }
 }
 
-void print_solution(const double* pd_answers, const int b_show_imaginary) {
-    log_assert(pd_answers, "error", ERROR_REPORTS, return;);
-    // if (!pd_answers) {
-    //     errno = NULLPTR_ERROR;
-    //     fprintf(stderr, "NULLPTR_ERROR: pd_answers in \"print_solution\" was NULL\n");
-    //     exit(EXIT_FAILURE);
-    // }
+void print_solution(const double* pd_answers, const int b_show_imaginary, int* pi_error_code) {
+    _LOG_FAIL_CHECK_(pd_answers, "error", ERROR_REPORTS, return;, pi_error_code, NULLPTR_ERROR);
 
     if (isnan(pd_answers[0])) {
         printf("Equation has no solutions.\n");
