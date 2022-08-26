@@ -24,7 +24,7 @@
 void read_double(const char* prefix, double* variable, int* error_code = NULL);
 
 /**
- * @brief Prints out the solution of the square equation in the fancy way.
+ * @brief Prints out the solution of the square equation in a fancy way.
  * 
  * @param answers pointer to the array of at least 4 doubles with answers 
  * in the shape specified in rootsolver.c/void solve

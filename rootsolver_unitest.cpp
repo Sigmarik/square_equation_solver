@@ -53,9 +53,7 @@ enum TEST_READING_RESULTS {
 int read_test(double* pd_a, double* pd_b, double* pd_c, double* pd_expected);
 
 /**
- * @brief Detects if file is corrupt.
- * 
- * @param expectation next character expected to be in input
+ * @brief Detects unexpected characters.
  * 
  * @return int 0 if everything is fine and 1 othervise
  */
@@ -79,7 +77,7 @@ int skip_line(int* status);
  * @param pd_result received answer
  */
 void print_test_info(const double d_a, const double d_b, const double d_c, 
-                       const double * const pd_expected, const double * const pd_result);
+                     const double * const pd_expected, const double * const pd_result);
 
 enum TEST_RESULTS {
     TEST_SUCCESS,
@@ -96,7 +94,7 @@ int main(void) {
 
     double d_a = 0, d_b = 0, d_c = 0, pd_result[4] = {}, pd_expected[4] = {};
 
-    log_write("status", "reading file with tests...", STATUS_REPORTS, &errno);
+    log_printf(STATUS_REPORTS, "status", "reading file with tests...\n");
 
     int read_result = 0;
     for (int test_id = 0; 
@@ -109,12 +107,12 @@ int main(void) {
             continue;
         }
 
-        _LOG_PRINTF_(STATUS_REPORTS + 1, "status", "Test %d detected. Processing...\n", test_id);
+        log_printf(STATUS_REPORTS + 1, "status", "Test %d detected. Processing...\n", test_id);
 
         int err_code = 0;
         solve_square(d_a, d_b, d_c, pd_result, &err_code);
 
-        _LOG_PRINTF_(STATUS_REPORTS + 1, "status", "Test %d detected. Verifying...\n", test_id);
+        log_printf(STATUS_REPORTS + 1, "status", "Test %d detected. Verifying...\n", test_id);
 
         if (err_code || !compare_answers(pd_result, pd_expected, 4)) {
             printf(err_code ? "RE" : "WA");
@@ -123,17 +121,17 @@ int main(void) {
             exec_result = TEST_FAIL;
         } else {
             printf("OK: Test %d passed.\n", test_id);
-            log_write("status", "Test successful.", STATUS_REPORTS + 1, &errno);
+            log_printf(STATUS_REPORTS + 1, "status", "Test successful.\n");
         }
     }
-    log_write("status", "EOF detected. Reading and testing was terminated.", STATUS_REPORTS, &errno);
+    log_printf(STATUS_REPORTS, "status", "EOF detected. Reading and testing was terminated.\n");
 
     return exec_result;
 }
 
 int compare_answers(const double* pd_a, const double* pd_b, const int num_elements) {
     for (int id = 0; id < num_elements; id++) {
-        if (i_dcmp(pd_a[id], pd_b[id])) return 0;
+        if (doublecmp(pd_a[id], pd_b[id])) return 0;
     }
     return 1;
 }
@@ -166,7 +164,7 @@ int check_input() {
 int skip_line(int* status) {
     if (check_input() == 1) {
         while (getchar() != '\n');
-        log_write("warning", "Wrong character detected. Skipping to the next line.", WARNINGS, &errno);
+        log_printf(WARNINGS, "warning", "Unexpected character detected. Skipping to the next line.\n");
         *status = READ_CORRUPTION;
         return 0;
     } return 1;
@@ -175,7 +173,7 @@ int skip_line(int* status) {
 void print_test_info(const double d_a, const double d_b, const double d_c, 
                        const double * const pd_expected, const double * const pd_result) {
     
-    log_write("status", "Test failed.", STATUS_REPORTS + 1, &errno);
+    log_printf(STATUS_REPORTS + 1, "status", "Test failed.\n");
 
     printf("  A = %lg, B = %lg, C = %lg\n", d_a, d_b, d_c);
 

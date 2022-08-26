@@ -12,19 +12,27 @@ void parse_args(const int argc, const char** argv, const int action_c, const str
             continue;
         
         for (int tag_id = 0; tag_id < action_c; tag_id++) {
-            if (!(arg[1] == actions[tag_id].short_name || 
-                (arg[1] == '-' && !strcmp(arg + 2, actions[tag_id].long_name)))) continue;
+            if (!(arg[1] == actions[tag_id].name.short_name || 
+                (arg[1] == '-' && strcmp(arg + 2, actions[tag_id].name.long_name) == 0))) continue;
+            //                                  ^ number of chars in "--"
             if (actions[tag_id].action)
-                actions[tag_id].action(actions[tag_id].arg_count, actions[tag_id].parameters, arg + 2);
-        }
+                actions[tag_id].action(actions[tag_id].parameters_length, actions[tag_id].parameters, arg + 2);
+        }  //                                                               number of chars in "--" ^
 
-        if (!strcmp(arg, "--help") || !strcmp(arg, "-help") || !strcmp(arg, "help")) {
+        if (strcmp(arg, "--help") == 0 || strcmp(arg, "-help") == 0 || strcmp(arg, "-h") == 0 || strcmp(arg, "-H") == 0) {
             printf("Valid tags:\n\n");
+            printf("-H -h -help --help - prints this message.\n\n");
             for (int tag_id = 0; tag_id < action_c; tag_id++) {
-                printf("-%c or --%s - %s\n\n", actions[tag_id].short_name, actions[tag_id].long_name, actions[tag_id].description);
+                printf("-%c --%s - %s\n\n", actions[tag_id].name.short_name, actions[tag_id].name.long_name, 
+                                               actions[tag_id].description);
             }
             // Any program should stop when user only wants to know its options.
             exit(EXIT_SUCCESS);
         }
     }
+}
+
+void edit_int(const int argc, void** argv, const char* argument) {
+    *(int*)argv[0] = 0;
+    *(int*)argv[0] = atoi(argument);
 }

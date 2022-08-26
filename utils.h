@@ -21,7 +21,7 @@
  * 
  * @note Doubles are considered equal if they are closer then 1e-10
  */
-int i_dcmp(const double a, const double b);
+int doublecmp(const double a, const double b);
 
 /**
  * @brief Prints complex numbers containing both normal and imaginary part.

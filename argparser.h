@@ -14,13 +14,32 @@
 
 #include <cstddef>
 
+/**
+ * @brief 
+ * 
+ */
+struct ActionName {
+    char short_name = 0;
+    const char* long_name = "";
+};
+
+/**
+ * @brief Structure to store line arguments.
+ * 
+ * @param short_name
+ */
 struct ActionTag {
-    char short_name = '_';
-    const char* long_name = NULL;
+    struct ActionName name;
+
+    //! TODO: extract in GenericFunctionCall
+    //! Impossible as structure should somehow store function arguments (values) before it is processed.
     void** parameters = NULL;
-    int arg_count = 0;
+    int parameters_length = 0;
     void (*action)(const int argc, void** argv, const char* argument);
+
+        
     const char* description = "no information provided.";
+
 };
 
 /**
@@ -28,9 +47,18 @@ struct ActionTag {
  * 
  * @param argc number of arguments
  * @param argv arguments
- * @param action_c number of tags
+ * @param actions_count number of tags
  * @param actions tags
  */
-void parse_args(const int argc, const char** argv, const int action_c, const struct ActionTag* actions);
+void parse_args(const int argc, const char** argv, const int actions_count, const struct ActionTag* actions);
+
+/**
+ * @brief Sets integer value (first pointer) to parsed value of argument.
+ * 
+ * @param argc number of arguments
+ * @param argv pointers to arguments (1-st element should be int*)
+ * @param argument argument as string
+ */
+void edit_int(const int argc, void** argv, const char* argument);
 
 #endif

@@ -37,7 +37,7 @@ enum ERRORS {
 do {                                                                                                                    \
     if (!(equation)) {                                                                                                  \
         if (errcode) *(errcode) = (errtype);                                                                            \
-        _LOG_PRINTF_(importance, "error", "Equation %s in file %s at line %d failed.\n", #equation, __FILE__, __LINE__);\
+        log_printf(importance, "error", "Equation %s in file %s at line %d failed.\n", #equation, __FILE__, __LINE__);\
         action                                                                                                          \
     }                                                                                                                   \
 } while(0)
@@ -45,8 +45,11 @@ do {                                                                            
 #define _LOG_FAIL_CHECK_(...) ((void) 0)
 #endif
 
+
+//! TODO: improve name (so it shows what function is doing)
+//! No better name was invented then the existing one.
 /**
- * @brief Prints [errno] variable if it's value is not zero.
+ * @brief Prints errno value and its description and closes logs.
  */
 void end_program();
 

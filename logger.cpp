@@ -5,30 +5,48 @@
 
 #include "debug.h"
 
-static FILE* pf_logfile = NULL;
-static FILE* pf_logdummy = NULL;
-static unsigned int i_log_threshold = 0;
+static FILE* logfile = NULL;
+static FILE* logdummy = NULL;
+static unsigned int log_threshold = 0;
 
-void log_init(const char* pc_filename, const unsigned int i_threshold, int* pi_error_code) {
-    i_log_threshold = i_threshold;
-    char pc_dummyname[1024] = {};
-    strncpy(pc_dummyname, pc_filename, 1023);
-    strncat(pc_dummyname, "_dummy.log", 1023 - strlen(pc_dummyname));
+/**
+ * @brief Prints out log line prefix (time and tag).
+ * 
+ * @param tag (optional) prefix tag
+ * @param importance (optional) message importance
+ */
+static void log_prefix(const char* tag = "status", const unsigned int importance = ABSOLUTE_IMPORTANCE);
 
-    if (!(pf_logdummy = fopen(pc_dummyname, "w"))) {
-        if (pi_error_code) *pi_error_code = FILE_ERROR;
+/**
+ * @brief Returns currently opened log file by given importance.
+ * 
+ * @param importance (optional) importance of the message file will be used for.
+ * 
+ * @return FILE* log file
+ */
+static FILE* log_file(const unsigned int importance = ABSOLUTE_IMPORTANCE);
+
+void log_init(const char* filename, const unsigned int threshold, int* error_code) {
+    log_threshold = threshold;
+    char dummyname[1024] = {};
+    strncpy(dummyname, filename, 1023);
+    strncat(dummyname, "_dummy.log", 1023 - strlen(dummyname));
+
+    if (!(logdummy = fopen(dummyname, "w"))) {
+        if (error_code) *error_code = FILE_ERROR;
         return;
     }
 
-    if ((pf_logfile = fopen(pc_filename, "a"))) {
-        _LOG_PRINTF_(ABSOLUTE_IMPORTANCE, "open", "Log file %s was opened. Log dummy - %s.\n", pc_filename, pc_dummyname);
+
+    if ((logfile = fopen(filename, "a"))) {
+        log_printf(ABSOLUTE_IMPORTANCE, "open", "Log file %s was opened. Log dummy - %s.\n", filename, dummyname);
         return;
     }
 
-    if (pi_error_code) *pi_error_code = FILE_ERROR;
+    if (error_code) *error_code = FILE_ERROR;
 }
 
-void log_prefix(const char* tag, const unsigned int importance) {
+static void log_prefix(const char* tag, const unsigned int importance) {
     if (!log_file()) return;
     time_t rawtime;
     struct tm * timeinfo;
@@ -41,19 +59,27 @@ void log_prefix(const char* tag, const unsigned int importance) {
     fprintf(log_file(importance), "%-20s [%s]:  ", pc_timestamp, tag);
 }
 
-void log_write(const char* tag, const char* message, const unsigned int importance, int* pi_error_code) {
-    if (!log_file()) return;
-    _LOG_PRINTF_(importance, tag, "%s\n", message);
+void log_printf(const unsigned int importance, const char* tag, const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    if (log_file(importance)) {
+        log_prefix(tag, importance);
+        vfprintf(log_file(importance), format, args);
+        fflush(log_file(importance));
+    }
+
+    va_end(args);
 }
 
-FILE* log_file(const unsigned int importance) {
-    return importance >= i_log_threshold ? pf_logfile : pf_logdummy;
+static FILE* log_file(const unsigned int importance) {
+    return importance >= log_threshold ? logfile : logdummy;
 }
 
-void log_close(int* pi_error_code) {
+void log_close(int* error_code) {
     if (!log_file()) return;
-    log_write("close", "Closing log files.");
-    if (!fclose(pf_logfile) || !fclose(pf_logdummy)) {
-        if (pi_error_code) *pi_error_code = FILE_ERROR;
+    log_printf(ABSOLUTE_IMPORTANCE, "close", "Closing log files.\n");
+    if (!fclose(logfile) || !fclose(logdummy)) {
+        if (error_code) *error_code = FILE_ERROR;
     }
 }

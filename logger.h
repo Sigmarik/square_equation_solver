@@ -30,13 +30,11 @@ enum IMPORTANCES {
  * @param tag message tag
  * @param __VA_ARGS__ arguments for fprintf()
  */
-#define _LOG_PRINTF_(importance, tag, ...) {                \
-    if (log_file()) {                                       \
-        log_prefix(tag, importance);                        \
-        fprintf(log_file(importance), __VA_ARGS__);         \
-        fflush(log_file(importance));                       \
-    }                                                       \
-}
+
+#include <stdarg.h>
+
+//! TODO: implement log printf that prints name of file and line (very useful for debugging)
+//! Impossible without rewriting whole logger subsystems into macros and sh*tting readability of log files.
 
 /**
  * @brief Opens log file or creates empty one.
@@ -48,31 +46,14 @@ enum IMPORTANCES {
 void log_init(const char* filename = "log", const unsigned int threshold = 0, int* error_code = NULL);
 
 /**
- * @brief Prints out log line prefix (time and tag).
+ * @brief Prints line to logs with automatic prefix.
  * 
- * @param tag (optional) prefix tag
- * @param importance (optional) message importance
- */
-void log_prefix(const char* tag = "status", const unsigned int importance = ABSOLUTE_IMPORTANCE);
-
-/**
- * @brief Writes static message to log file followed by time and tag.
- * 
+ * @param importance importance of the message
  * @param tag message tag
- * @param message message text
- * @param importance (optional) message importance
- * @param error_code (optional) variable to put function execution code in
+ * @param format format string for printf()
+ * @param ... arguments for printf()
  */
-void log_write(const char* tag, const char* message, const unsigned int importance = ABSOLUTE_IMPORTANCE, int* error_code = NULL);
-
-/**
- * @brief Returns currently opened log file by given importance.
- * 
- * @param importance (optional) importance of the message file will be used for.
- * 
- * @return FILE* log file
- */
-FILE* log_file(const unsigned int importance = ABSOLUTE_IMPORTANCE);
+void log_printf(const unsigned int importance, const char* tag, const char* format, ...);
 
 /**
  * @brief Closes all opened logs.
