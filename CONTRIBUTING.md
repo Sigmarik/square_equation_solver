@@ -164,12 +164,21 @@ double some_complex_value = (number_of_bats + number_of_caves -
 ```
 # Project Structure
 **rootsolver** - core library of the project. It contains definitions of functions like ```solve_linear()``` and ```solve_square()``` that solve equations. Function ```solve_linear()``` is not used by other modules, but it should not be marked statis as it is part of the library.
+
 **logger** - module that creates and manages program logs. ```log_init()``` initializes log files, ```log_close()``` closes them and ```log_printf()``` prints lines into logs with all the formating.
-**debug** - module for easier debugging. It contains function ```end_program()``` that is not very agile, but is used by **main.cpp** and **rootsolver_unitest.cpp**
+
+**debug** - module for easier debugging. It contains function ```end_program()``` that is not very agile, but is used by 
+
+**main.cpp** and **rootsolver_unitest.cpp**
+
 **mainio** - module with a bunch of functions for easier console-based UI.
+
 **argparser** - module for parsing command line arguments. Used only by **main.cpp**, but is very agile and can be helpful for any program that should read command line arguments.
+
 **utils** - module with "orphan" functions.
+
 **main.cpp** - entry point for a programm that takes 3 numbers from user using console UI and calculates solution of quadric equation.
+
 **rootsolver_unitest.cpp** - entry point for a programm that runs a bunch of tests defined in **rootsolver_unitest.txt**.
 # Logger Structure
 **logger** module when initialized through ```log_init()``` function creates two log files (important and unimportant one) and defines certaint importance that server as a threshold between first and second file. When function ```log_printf()``` is called, it receives importance level of a message to print, and, if that importance is less then logger threshold, the message goes into second (less important) log file or the forst one otherwise.
@@ -178,4 +187,5 @@ The first one's name is defined in one of the arguments of the ```log_init()``` 
 The second one's name is made by concatenating "_dummy.log" to the name of the first log. This file, unlike its more important counterpart, is erased every time the program starts.
 # Contact Information
 For more information about contributing
+
 ***kudriashov.it@phystech.edu***

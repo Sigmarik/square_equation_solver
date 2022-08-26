@@ -5,13 +5,23 @@ The project contains libraries for solving equation, printing solution in specif
 There are also tools for testing and compiling project in specific ways (check makefile for that).
 
 # Building and Testing
+
 Compile project (linux):
+
 ...# make
+
 Cleanup project (linux):
+
 ...# make clean
+
 Run project (linux):
+
 ...# make run
+
 Run tests for rootsolver library (linux):
+
 ...# make test
-Reset project to its original state (remove all logs, builds and objects) (linux):
-...# make rm
+
+Clear build folders (linux):
+
+...# make rmbld
