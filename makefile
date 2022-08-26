@@ -24,6 +24,7 @@ all: main
 MAIN_OBJECTS = main.o mainio.o rootsolver.o debug.o logger.o argparser.o utils.o
 MAIN_ASSETS = rootsolver.conf
 main: $(MAIN_OBJECTS)
+	mkdir $(BLD_FOLDER)
 	cp $(MAIN_ASSETS) $(BLD_FOLDER)
 	$(CC) $(MAIN_OBJECTS) -o $(BLD_FOLDER)/$(BLD_FULL_NAME)
 
@@ -33,6 +34,7 @@ run:
 TEST_OBJECTS = rootsolver_unitest.o rootsolver.o debug.o logger.o utils.o
 TEST_ASSETS = rootsolver_unitest.txt
 test: $(TEST_OBJECTS)
+	mkdir $(TEST_FOLDER)
 	cp $(TEST_ASSETS) $(TEST_FOLDER)
 	$(CC) $(ARGS) $(TEST_OBJECTS) -o $(TEST_FOLDER)/$(ROOTSOLVER_UNI_NAME)
 	cd $(TEST_FOLDER) && exec ./$(ROOTSOLVER_UNI_NAME) > $(ROOTSOLVER_UNI_LOG) 2>&1 < $(ROOTSOLVER_TESTS)
@@ -68,5 +70,7 @@ clean:
 	rm -rf *.o
 
 rmbld:
-	cd $(BLD_FOLDER) && rm -rf *
-	cd $(TEST_FOLDER) && rm -rf *
+	rm -rf $(BLD_FOLDER)
+	rm -rf $(TEST_FOLDER)
+
+rm: clean rmbld

@@ -25,3 +25,7 @@ Run tests for rootsolver library (linux):
 Clear build folders (linux):
 
 ...# make rmbld
+
+Return project to its original state
+
+...# make rm
