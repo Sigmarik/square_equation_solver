@@ -59,7 +59,7 @@ static void log_prefix(const char* tag, const unsigned int importance) {
     fprintf(log_file(importance), "%-20s [%s]:  ", pc_timestamp, tag);
 }
 
-void log_printf(const unsigned int importance, const char* tag, const char* format, ...) {
+void _log_printf(const unsigned int importance, const char* tag, const char* format, ...) {
     va_list args;
     va_start(args, format);
 
@@ -78,7 +78,7 @@ static FILE* log_file(const unsigned int importance) {
 
 void log_close(int* error_code) {
     if (!log_file()) return;
-    log_printf(ABSOLUTE_IMPORTANCE, "close", "Closing log files.\n");
+    log_printf(ABSOLUTE_IMPORTANCE, "close", "Closing log files.\n\n");
     if (!fclose(logfile) || !fclose(logdummy)) {
         if (error_code) *error_code = FILE_ERROR;
     }

@@ -23,7 +23,7 @@
  *
  * @note returns INFINITY if there are infinite roots and NAN if zero
  */
-double d_solve_linear(const double a, const double b);
+double solve_linear(const double a, const double b);
 
 /**
  * @brief 

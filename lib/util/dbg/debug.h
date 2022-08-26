@@ -46,11 +46,9 @@ do {                                                                            
 #endif
 
 
-//! TODO: improve name (so it shows what function is doing)
-//! No better name was invented then the existing one.
 /**
  * @brief Prints errno value and its description and closes logs.
  */
-void end_program();
+void log_end_program();
 
 #endif

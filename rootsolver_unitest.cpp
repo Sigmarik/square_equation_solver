@@ -13,10 +13,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "debug.h"
+#include "lib/util/dbg/debug.h"
 
-#include "rootsolver.h"
-#include "utils.h"
+#include "lib/rootsolver.h"
+#include "lib/util/utils.h"
 
 /**
  * @brief Compares two double arrays and returns 1 if they are equal.
@@ -85,7 +85,7 @@ enum TEST_RESULTS {
 };
 
 int main(void) {
-    atexit(end_program);
+    atexit(log_end_program);
     log_init("rootsolver_tester.log", AUTOMATIC_CORRECTIONS);
 
     int exec_result = TEST_SUCCESS;

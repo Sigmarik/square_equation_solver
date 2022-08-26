@@ -33,8 +33,24 @@ enum IMPORTANCES {
 
 #include <stdarg.h>
 
-//! TODO: implement log printf that prints name of file and line (very useful for debugging)
-//! Impossible without rewriting whole logger subsystems into macros and sh*tting readability of log files.
+#ifndef NLOG_PRINT_LINE
+/**
+ * @brief Print message to logs followed by call information.
+ */
+#define log_printf(importance, tag, ...) do {                                   \
+    _log_printf(importance, tag, "Call on line %d of file %s.\n", __LINE__, __FILE__);  \
+    _log_printf(importance, tag, __VA_ARGS__);                                  \
+} while(0)
+#else
+/**
+ * @brief Print message to logs.
+ */
+#define log_printf(importance, tag, ...) do { \
+    _log_printf(importance, tag, __VA_ARGS__);\
+} while(0)
+#endif
+
+// One macro isn't that bad considering it can be very useful for debugging
 
 /**
  * @brief Opens log file or creates empty one.
@@ -53,7 +69,7 @@ void log_init(const char* filename = "log", const unsigned int threshold = 0, in
  * @param format format string for printf()
  * @param ... arguments for printf()
  */
-void log_printf(const unsigned int importance, const char* tag, const char* format, ...);
+void _log_printf(const unsigned int importance, const char* tag, const char* format, ...);
 
 /**
  * @brief Closes all opened logs.

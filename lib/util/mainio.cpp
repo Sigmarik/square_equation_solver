@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "debug.h"
+#include "dbg/debug.h"
 #include "utils.h"
 
 #define PRECONDITION

@@ -2,5 +2,7 @@
 *.out
 *.log
 .vscode/
+build
+test
 
 # TODO: move build out of source-tree, than substitute *.o *.out and *.log with build which would contain all of them

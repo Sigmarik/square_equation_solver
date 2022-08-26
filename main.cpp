@@ -12,10 +12,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "rootsolver.h"
-#include "mainio.h"
-#include "debug.h"
-#include "argparser.h"
+#include "lib/rootsolver.h"
+#include "lib/util/mainio.h"
+#include "lib/util/dbg/debug.h"
+#include "lib/util/argparser.h"
 
 static const char* pc_config_name = "rootsolver.conf";
 static int show_imaginary = 1;
@@ -67,16 +67,20 @@ static void* __log_threshold_array[1] = {&log_threshold};
 static const struct ActionTag LINE_TAGS[NUMBER_OF_TAGS] = {
     {
         .name = {'O', "owl"}, 
-        .parameters = {}, 
-        .parameters_length = 0, 
-        .action = print_owl, 
+        .action = {
+            .parameters = {}, 
+            .parameters_length = 0, 
+            .function = print_owl, 
+        },
         .description = "prints 10 owls on the screen."
     },
     {
         .name = {'I', "importance"}, 
-        .parameters = __log_threshold_array,
-        .parameters_length = 1, 
-        .action = edit_int, 
+        .action = {
+            .parameters = __log_threshold_array,
+            .parameters_length = 1, 
+            .function = edit_int,
+        },
         .description = "(in the form of -I[int]) sets log\n"
                         "    threshold to specified number.\n" 
                         "    Does not check if integer is specified."
@@ -89,7 +93,7 @@ static const struct ActionTag LINE_TAGS[NUMBER_OF_TAGS] = {
  * @return exit status (0 if successful)
  */
 int main(const int argc, const char** argv) {
-    atexit(end_program);
+    atexit(log_end_program);
 
     parse_args(argc, argv, NUMBER_OF_TAGS, LINE_TAGS);
     log_init("program_log.log", log_threshold, &errno);

@@ -15,9 +15,11 @@ void parse_args(const int argc, const char** argv, const int action_c, const str
             if (!(arg[1] == actions[tag_id].name.short_name || 
                 (arg[1] == '-' && strcmp(arg + 2, actions[tag_id].name.long_name) == 0))) continue;
             //                                  ^ number of chars in "--"
-            if (actions[tag_id].action)
-                actions[tag_id].action(actions[tag_id].parameters_length, actions[tag_id].parameters, arg + 2);
-        }  //                                                               number of chars in "--" ^
+            const GenericFunctionCall* call = &actions[tag_id].action;
+            if (call->function)
+                call->function(call->parameters_length, 
+                call->parameters, arg + 2);
+        }  //   number of chars in "--" ^
 
         if (strcmp(arg, "--help") == 0 || strcmp(arg, "-help") == 0 || strcmp(arg, "-h") == 0 || strcmp(arg, "-H") == 0) {
             printf("Valid tags:\n\n");

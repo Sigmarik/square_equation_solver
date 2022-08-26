@@ -23,6 +23,12 @@ struct ActionName {
     const char* long_name = "";
 };
 
+struct GenericFunctionCall {
+    void** parameters = NULL;
+    int parameters_length = 0;
+    void (*function)(const int argc, void** argv, const char* argument);
+};
+
 /**
  * @brief Structure to store line arguments.
  * 
@@ -30,16 +36,8 @@ struct ActionName {
  */
 struct ActionTag {
     struct ActionName name;
-
-    //! TODO: extract in GenericFunctionCall
-    //! Impossible as structure should somehow store function arguments (values) before it is processed.
-    void** parameters = NULL;
-    int parameters_length = 0;
-    void (*action)(const int argc, void** argv, const char* argument);
-
-        
+    struct GenericFunctionCall action;
     const char* description = "no information provided.";
-
 };
 
 /**
