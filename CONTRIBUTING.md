@@ -1,17 +1,18 @@
-# General information
+# Contributing to Rootsolver library
+## General information
 First of all, thank you for contributing to this wasteland of a project. 
 Second af all, it was not expected that anyone will ever make contributions to this. 
 And, finally, if you still want to commit changes, make sure you read README.md and CODE_OF_CONDUCT.md 
 as these files contain some important information about how you should not be an a*shole.
-# Language
+## Language
 Primarely English (US). It also applyes to comments, documentation, naming and messages.
 There are a few (2 lines in main.cpp) comments written in Russian, though, as they describe 
 joke function and not very important, but it is highly exceptional and should not be present anywhere else in code.
 It also will be highly appreciated if you spot grammatical mistakes anywhere in the content of this reposiory and will be able to fix them.
-# Code Style
+## Code Style
 We use codestyle close to pep8 for python, but for C++.
 
-## Naming
+### Naming
 Variables and functions should be names in lower case.
 ```
 void example_function(int example_variable = 1);
@@ -73,7 +74,7 @@ void some_function(const int coef_a, const int coef_b) {
 }
 ```
 
-## Comments
+### Comments
 Line comments should be written as
 ```
 int owl_age = 3;  // Age of the owl.
@@ -117,7 +118,7 @@ Function, class, structure, macro and file descriptions should be written compat
  * @author Author Name (author_email@corp.com)
  */
 ```
-## Line transitions
+### Line transitions
 Code blocks (curly brackets) should be written as
 ```
 void function() {
@@ -162,14 +163,12 @@ double some_complex_value = (number_of_bats + number_of_caves -
                                     number_of_parrots) * 3) / 
                                 (cargo_divisor + 1);
 ```
-# Project Structure
+## Project Structure
 **rootsolver** - core library of the project. It contains definitions of functions like ```solve_linear()``` and ```solve_square()``` that solve equations. Function ```solve_linear()``` is not used by other modules, but it should not be marked statis as it is part of the library.
 
 **logger** - module that creates and manages program logs. ```log_init()``` initializes log files, ```log_close()``` closes them and ```log_printf()``` prints lines into logs with all the formating.
 
 **debug** - module for easier debugging. It contains function ```end_program()``` that is not very agile, but is used by 
-
-**main.cpp** and **rootsolver_unitest.cpp**
 
 **mainio** - module with a bunch of functions for easier console-based UI.
 
@@ -180,12 +179,12 @@ double some_complex_value = (number_of_bats + number_of_caves -
 **main.cpp** - entry point for a programm that takes 3 numbers from user using console UI and calculates solution of quadric equation.
 
 **rootsolver_unitest.cpp** - entry point for a programm that runs a bunch of tests defined in **rootsolver_unitest.txt**.
-# Logger Structure
+## Logger Structure
 **logger** module when initialized through ```log_init()``` function creates two log files (important and unimportant one) and defines certaint importance that server as a threshold between first and second file. When function ```log_printf()``` is called, it receives importance level of a message to print, and, if that importance is less then logger threshold, the message goes into second (less important) log file or the forst one otherwise.
-## Difference between two logger files.
+### Difference between two logger files.
 The first one's name is defined in one of the arguments of the ```log_init()``` function. This log is considered important and it is not getting erased on the next programm run.
 The second one's name is made by concatenating "_dummy.log" to the name of the first log. This file, unlike its more important counterpart, is erased every time the program starts.
-# Contact Information
+## Contact Information
 For more information about contributing
 
 ***kudriashov.it@phystech.edu***
